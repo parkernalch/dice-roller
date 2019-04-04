@@ -9,23 +9,6 @@ def Roll(eq):
         'dice breakdown': eq
     }
 
-    pattern = r'\d+d\d+!?[^h|l|+|-]'
-    for match in re.findall(pattern, removed_whitespace_eq):
-        #print(match)
-        if match[-1:] == '!':
-            isExploding = True
-        else:
-            isExploding = False
-
-        count = int(match.split('d')[0])
-        sides = int(match.split('d')[1].replace('!',''))
-
-        match_die = dice.Die(sides, isExploding, False)
-        
-        match_roll = match_die.RollN(count)
-        output['equation'] = output['equation'].replace(match, str(match_roll['result']), 1)
-        output['dice breakdown'] = output['dice breakdown'].replace(match, str(match_roll['dice']), 1)
-    
     chooser = r'\d+d\d+h\d+'
     for keep in re.findall(chooser, removed_whitespace_eq):
         #print(keep)
@@ -66,6 +49,23 @@ def Roll(eq):
 
         output['result'] = sum([sum(i) for i in kept])
         #print(output['result'])
+    
+    pattern = r'\d+d\d+!?'
+    for match in re.findall(pattern, removed_whitespace_eq):
+        #print(match)
+        if match[-1:] == '!':
+            isExploding = True
+        else:
+            isExploding = False
+
+        count = int(match.split('d')[0])
+        sides = int(match.split('d')[1].replace('!',''))
+
+        match_die = dice.Die(sides, isExploding, False)
+        
+        match_roll = match_die.RollN(count)
+        output['equation'] = output['equation'].replace(match, str(match_roll['result']), 1)
+        output['dice breakdown'] = output['dice breakdown'].replace(match, str(match_roll['dice']), 1)
 
     try:
         #print('start try block')
